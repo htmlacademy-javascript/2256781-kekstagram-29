@@ -26,7 +26,7 @@ const getNumber = function (rowData) {
     }
   }
 
-  return tmpString.length > 0 ? tmpString : NaN;
+  return parseInt(tmpString, 10);
 };
 
 getNumber('2023 год'); // 2023
