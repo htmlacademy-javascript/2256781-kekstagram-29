@@ -17,7 +17,7 @@ const isPalindrome = function (string) {
 isPalindrome('топот'); // true
 
 const getNumber = function (rowData) {
-  const normalizedString = typeof rowData === 'string' ? rowData : rowData.toString();
+  const normalizedString = rowData.toString();
   let tmpString = '';
 
   for (let i = 0; i <= normalizedString.length - 1; i++) {
@@ -30,3 +30,4 @@ const getNumber = function (rowData) {
 };
 
 getNumber('2023 год'); // 2023
+//getNumber(1.5); // 15
