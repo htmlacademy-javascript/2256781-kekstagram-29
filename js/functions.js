@@ -1,6 +1,4 @@
-const isNormalLength = function (string, length) {
-  return string.length <= length;
-};
+const isNormalLength = (string, length) => string.length <= length;
 
 isNormalLength('проверяемая строка', 20); // true
 
