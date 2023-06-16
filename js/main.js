@@ -161,7 +161,6 @@ const createPhotoDescription = () => {
   };
 };
 
-Array.from({ length: CountPhotos.END }, createPhotoDescription);
 
-// const Photos = Array.from({ length: CountPhotos.END }, createPhotoDescription);
-// console.dir(Photos, { depth: null });
+const Photos = Array.from({ length: CountPhotos.END }, createPhotoDescription);
+console.dir(Photos, { depth: null });
