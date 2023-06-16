@@ -163,4 +163,4 @@ const createPhotoDescription = () => {
 
 
 const Photos = Array.from({ length: CountPhotos.END }, createPhotoDescription);
-console.dir(Photos, { depth: null });
+// console.dir(Photos, { depth: null });
