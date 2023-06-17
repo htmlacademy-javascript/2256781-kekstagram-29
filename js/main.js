@@ -161,5 +161,4 @@ const createPhotoDescription = () => {
   };
 };
 
-
 Array.from({ length: CountPhotos.END }, createPhotoDescription);
