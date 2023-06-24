@@ -94,7 +94,7 @@ const checkFunctionTwoWay = ({ start, end, meetingAt, duration }) => {
   let isCorrect = false;
 
   const convertToMinutes = (partOfTime) => {
-    const [hour, minute] = partOfTime.split(':').map(Number);
+    const [hour, minute] = partOfTime.split(':').map((value) => Number(value));
     return hour * 60 + minute;
   };
 
