@@ -111,8 +111,8 @@ const checkFunctionTwoWay = ({ start, end, meetingAt, duration }) => {
 
 // Usage example
 const addChart = makeSchedule();
+addChart.addCheck(checkFunctionTwoWay);
 addChart.addCheck(checkFunctionOneWay);
-// addChart.addCheck(checkFunctionTwoWay);
 
 DATA.forEach((obj) => {
   addChart(obj);
