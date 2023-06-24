@@ -48,6 +48,8 @@ const makeSchedule = () => {
   return add;
 };
 
+// в этом подходе упор сделан на
+// сложные условия
 const checkFunctionOneWay = ({ start, end, meetingAt, duration }) => {
   let isCorrect = false;
 
@@ -85,6 +87,9 @@ const checkFunctionOneWay = ({ start, end, meetingAt, duration }) => {
   return isCorrect;
 };
 
+// в этом подходе упор сделан
+// на перевод строк по типу '17:30' в минуты (числа)
+// а далее уже более простое сравнение этих чисел
 const checkFunctionTwoWay = ({ start, end, meetingAt, duration }) => {
   let isCorrect = false;
 
