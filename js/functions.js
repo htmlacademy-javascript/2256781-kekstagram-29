@@ -48,32 +48,57 @@ const makeSchedule = () => {
   return add;
 };
 
-const checkFunction = ({ start, end, meetingAt, duration }) => {
+const checkFunctionOneWay = ({ start, end, meetingAt, duration }) => {
   let isCorrect = false;
 
-  start = start.split(':').map((value) => parseInt(value, 10));
-  end = end.split(':').map((value) => parseInt(value, 10));
-  meetingAt = meetingAt.split(':').map((value) => parseInt(value, 10));
+  const [startDayWorkHour, startDayWorkMinute] = start.split(':').map((value) => parseInt(value, 10));
+  const [endDayWorkHour, endDayWorkMinute] = end.split(':').map((value) => parseInt(value, 10));
+  const [startMeetingHour, startMeetingMinute] = meetingAt.split(':').map((value) => parseInt(value, 10));
 
   // проверю что начало встречи попадает в раб. интервал дня
-  if (meetingAt[0] >= start[0] && meetingAt[0] <= end[0]) {
+  if (
+    startMeetingHour > startDayWorkHour ||
+    (startMeetingHour === startDayWorkHour && startMeetingMinute >= startDayWorkMinute)
+  ) {
     // вычислю точку в которой закончится встреча
 
-    // переменная ниже нужна, если при сложении минут
+    // переменная нужна, если при сложении минут
     // получился переход разряда (т.е. минут > 60)
     let extraHour = 0;
 
-    const pointMinute =
-      (duration % 60) + meetingAt[1] > 60
-        ? (extraHour++, ((duration % 60) + meetingAt[1]) % 60)
-        : (duration % 60) + meetingAt[1];
-    const pointHour = Math.trunc(duration / 60) + meetingAt[0] + extraHour;
+    const endMeetingMinute =
+      (duration % 60) + startMeetingMinute > 60
+        ? (extraHour++, ((duration % 60) + startMeetingMinute) % 60)
+        : (duration % 60) + startMeetingMinute;
+    const endMeetingHour = Math.trunc(duration / 60) + startMeetingHour + extraHour;
 
     // теперь проверю, что встреча учитывая заданную ей регулярность
     // закончиться до конца раб. дня
-    if (pointHour < end[0] || (pointHour === end[0] && pointMinute <= end[1])) {
+    if (
+      endMeetingHour < endDayWorkHour ||
+      (endMeetingHour === endDayWorkHour && endMeetingMinute <= endDayWorkMinute)
+    ) {
       isCorrect = true;
-    } // console.log(start, end, meetingAt, duration, pointHour + ' - ' + pointMinute, isCorrect);
+    }
+  }
+
+  return isCorrect;
+};
+
+const checkFunctionTwoWay = ({ start, end, meetingAt, duration }) => {
+  let isCorrect = false;
+
+  const convertToMinutes = (partOfTime) => {
+    const [hour, minute] = partOfTime.split(':').map(Number);
+    return hour * 60 + minute;
+  };
+
+  const startDayWork = convertToMinutes(start);
+  const endDayWork = convertToMinutes(end);
+  const startMeeting = convertToMinutes(meetingAt);
+
+  if (startMeeting >= startDayWork && startMeeting + duration <= endDayWork) {
+    isCorrect = true;
   }
 
   return isCorrect;
@@ -81,7 +106,8 @@ const checkFunction = ({ start, end, meetingAt, duration }) => {
 
 // Usage example
 const addChart = makeSchedule();
-addChart.addCheck(checkFunction);
+addChart.addCheck(checkFunctionOneWay);
+// addChart.addCheck(checkFunctionTwoWay);
 
 DATA.forEach((obj) => {
   addChart(obj);
