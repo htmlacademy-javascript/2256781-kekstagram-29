@@ -1,9 +1,9 @@
-import { data } from './data.js';
+import { getData } from './data.js';
 import { render } from './render.js';
 import { slider } from './slider.js';
 import { validation } from './validation.js';
 
-data();
+getData();
 render();
 slider();
 validation();
