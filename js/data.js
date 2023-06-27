@@ -125,6 +125,6 @@ const createPhotoDescription = () => {
   };
 };
 
-const data = () => Array.from({ length: CountPhotos.END }, createPhotoDescription);
+const getData = () => Array.from({ length: CountPhotos.END }, createPhotoDescription);
 
-export { data };
+export { getData };
