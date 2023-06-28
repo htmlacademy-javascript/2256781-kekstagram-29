@@ -1,7 +1,5 @@
 import { createRandomNumberFromRange, getArrayElementByIndex } from './util.js';
 
-// console.log('загружен data');
-
 const CountPhotos = {
   START: 1,
   END: 25,

@@ -1,9 +1,4 @@
 import { getData } from './data.js';
-import { render } from './render.js';
-import { slider } from './slider.js';
-import { validation } from './validation.js';
+import { showPhotosOfOtherUsers } from './render.js';
 
-getData();
-render();
-slider();
-validation();
+showPhotosOfOtherUsers(getData());
