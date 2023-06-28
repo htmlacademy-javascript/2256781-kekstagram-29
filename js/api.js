@@ -123,6 +123,9 @@ const createPhotoDescription = () => {
   };
 };
 
-const getData = () => Array.from({ length: CountPhotos.END }, createPhotoDescription);
+const exchangeData = () => Promise.resolve(Array.from({ length: CountPhotos.END }, createPhotoDescription));
 
-export { getData };
+const getData = () => exchangeData();
+const sendData = (body) => void body;
+
+export { getData, sendData };

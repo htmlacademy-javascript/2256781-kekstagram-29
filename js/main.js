@@ -1,4 +1,12 @@
-import { getData } from './data.js';
-import { showPhotosOfOtherUsers } from './render.js';
+import { getData } from './api.js';
+import { renderPictureList } from './render.js';
 
-showPhotosOfOtherUsers(getData());
+const plug = (errMsg) => void errMsg;
+
+getData()
+  .then((data) => {
+    renderPictureList(data);
+  })
+  .catch((err) => {
+    plug(err.message);
+  });

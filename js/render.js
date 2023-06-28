@@ -1,4 +1,4 @@
-const showPhotosOfOtherUsers = (data) => {
+const renderPictureList = (data) => {
   const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
   const pictureListElement = document.querySelector('.pictures');
   const pictureListFragment = document.createDocumentFragment();
@@ -16,4 +16,4 @@ const showPhotosOfOtherUsers = (data) => {
   pictureListElement.appendChild(pictureListFragment);
 };
 
-export { showPhotosOfOtherUsers };
+export { renderPictureList };
