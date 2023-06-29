@@ -40,19 +40,19 @@ const makeSchedule = () => {
     }
     return add;
   };
+
+  add.correctList = [];
   add.addCheck = (check) => {
-    add.correctList = [];
     add.check = check;
     return add;
   };
+
   return add;
 };
 
 // в этом подходе упор сделан на
 // сложные условия
 const checkFunctionOneWay = ({ start, end, meetingAt, duration }) => {
-  let isCorrect = false;
-
   const [startDayWorkHour, startDayWorkMinute] = start.split(':').map((value) => parseInt(value, 10));
   const [endDayWorkHour, endDayWorkMinute] = end.split(':').map((value) => parseInt(value, 10));
   const [startMeetingHour, startMeetingMinute] = meetingAt.split(':').map((value) => parseInt(value, 10));
@@ -76,23 +76,16 @@ const checkFunctionOneWay = ({ start, end, meetingAt, duration }) => {
 
     // теперь проверю, что встреча учитывая заданную ей регулярность
     // закончиться до конца раб. дня
-    if (
-      endMeetingHour < endDayWorkHour ||
-      (endMeetingHour === endDayWorkHour && endMeetingMinute <= endDayWorkMinute)
-    ) {
-      isCorrect = true;
-    }
+    return (
+      endMeetingHour < endDayWorkHour || (endMeetingHour === endDayWorkHour && endMeetingMinute <= endDayWorkMinute)
+    );
   }
-
-  return isCorrect;
 };
 
 // в этом подходе упор сделан
 // на перевод строк по типу '17:30' в минуты (числа)
 // а далее уже более простое сравнение этих чисел
 const checkFunctionTwoWay = ({ start, end, meetingAt, duration }) => {
-  let isCorrect = false;
-
   const convertToMinutes = (partOfTime) => {
     const [hour, minute] = partOfTime.split(':').map((value) => Number(value));
     return hour * 60 + minute;
@@ -102,11 +95,7 @@ const checkFunctionTwoWay = ({ start, end, meetingAt, duration }) => {
   const endDayWork = convertToMinutes(end);
   const startMeeting = convertToMinutes(meetingAt);
 
-  if (startMeeting >= startDayWork && startMeeting + duration <= endDayWork) {
-    isCorrect = true;
-  }
-
-  return isCorrect;
+  return startMeeting >= startDayWork && startMeeting + duration <= endDayWork;
 };
 
 // Usage example
@@ -114,6 +103,10 @@ const addChart = makeSchedule();
 addChart.addCheck(checkFunctionTwoWay);
 addChart.addCheck(checkFunctionOneWay);
 
+// использую чейнинг
+// addChart(DATA[0])(DATA[1])(DATA[2])(DATA[3])(DATA[4]);
+
+// использую forEach
 DATA.forEach((obj) => {
   addChart(obj);
 });
