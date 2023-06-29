@@ -1,9 +1,12 @@
-import { getData } from './data.js';
-import { render } from './render.js';
-import { slider } from './slider.js';
-import { validation } from './validation.js';
+import { getData } from './api.js';
+import { renderPictureList } from './render.js';
 
-getData();
-render();
-slider();
-validation();
+const plug = (errMsg) => void errMsg;
+
+getData()
+  .then((data) => {
+    renderPictureList(data);
+  })
+  .catch((err) => {
+    plug(err.message);
+  });

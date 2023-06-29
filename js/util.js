@@ -1,7 +1,4 @@
-// console.log('загружен util');
-
 const isNormalLength = (string, length) => string.length <= length;
-
 // isNormalLength('проверяемая строка', 20); // true
 
 const isPalindrome = function (string) {
