@@ -73,6 +73,10 @@ const createRandomNumberFromRange = (startNumber, endNumber, isUnique = true) =>
   };
 };
 
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+const isEnterKey = (evt) => evt.key === 'Enter';
+
 export {
   getNumber,
   isPalindrome,
@@ -81,4 +85,6 @@ export {
   getArrayElementByIndex,
   getRandomArrayElement,
   createRandomNumberFromRange,
+  isEscapeKey,
+  isEnterKey,
 };
