@@ -25,12 +25,19 @@ function closeModalWindow() {
 }
 
 function onClickMiniature(evt) {
-  if (evt.target.matches('a.picture')) {
-    console.log(evt);
+  if (evt.target.matches('img.picture__img')) {
+    openModalWindow();
   }
 }
 
-picturesContainerElement.addEventListener('click', onClickMiniature);
+const setMiniatureClick = (cb) => {
+  picturesContainerElement.addEventListener('click', (evt) => {
+    onClickMiniature(evt);
+    // делаю рендер полноразмерной картинки
+    // передаю второй обязательный аргумент в коллбэк
+    cb(evt.target.getAttribute('data-id'));
+  });
+};
 
 closeElement.addEventListener('click', () => {
   closeModalWindow();
@@ -42,16 +49,4 @@ closeElement.addEventListener('keydown', (evt) => {
   }
 });
 
-openModalWindow();
-
-export { openModalWindow, closeModalWindow };
-
-// modalElement.addEventListener('click', () => {
-//   openModalWindow();
-// });
-
-// modalElement.addEventListener('keydown', (evt) => {
-//   if (isEnterKey(evt)) {
-//     openModalWindow();
-//   }
-// });
+export { setMiniatureClick };
