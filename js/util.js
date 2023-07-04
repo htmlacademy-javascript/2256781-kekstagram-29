@@ -77,6 +77,22 @@ const isEscapeKey = (evt) => evt.key === 'Escape';
 
 const isEnterKey = (evt) => evt.key === 'Enter';
 
+const filterObject = (arr, key, value) => arr.filter((obj) => obj[key] === value);
+
+// функция принимает название тега и объект с
+// настройками
+const createDOMElement = (tag, opts) => {
+  const el = document.createElement(tag);
+  // перебираем ключи объекта и записывает соответствующие свойства в элемент
+  for (const key in opts) {
+    el[key] = opts[key];
+  }
+  // возвращаем готовый элемент
+  return el;
+};
+
+const createDomFragment = (str) => new Range().createContextualFragment(str);
+
 export {
   getNumber,
   isPalindrome,
@@ -87,4 +103,7 @@ export {
   createRandomNumberFromRange,
   isEscapeKey,
   isEnterKey,
+  filterObject,
+  createDOMElement,
+  createDomFragment,
 };
