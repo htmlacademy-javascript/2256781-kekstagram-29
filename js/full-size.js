@@ -1,35 +1,73 @@
-import { filterObject, createDomFragment } from './util.js';
+import { filterObject, createDOMFragment, showAlert, hideElements, showElements } from './util.js';
+import { closeModalWindow } from './modal-window.js';
 
 const previewBoxElement = document.querySelector('.big-picture__preview');
 const bigPictureElement = previewBoxElement.firstElementChild.children[0];
 const likesCountElement = previewBoxElement.querySelector('.likes-count');
 const commentsCountElement = previewBoxElement.querySelector('.comments-count');
 const socialCaptionElement = previewBoxElement.querySelector('.social__caption');
-const socialCommentsBoxElement = previewBoxElement.querySelector('.social__comments');
+const socialCommentCountElement = document.querySelector('.social__comment-count');
+const commentsLoaderElement = previewBoxElement.querySelector('.comments-loader');
 const commentTemplateString = `
   <li class="social__comment">
-    <img
-      class="social__picture"
-      src=""
-      alt=""
-      width="35" height="35">
-    <p class="social__text">{{текст комментария}}</p>
+      <img
+        class="social__picture"
+        src=""
+        alt=""
+        width="35" height="35">
+      <p class="social__text">{{текст комментария}}</p>
   </li>
 `;
 
+const addComments = (comments) => {
+  const commentListFragment = document.createDocumentFragment();
+
+  comments.forEach((comment) => {
+    const newCommentElement = createDOMFragment(commentTemplateString);
+    const imgEl = newCommentElement.querySelector('.social__picture');
+    imgEl.src = comment.avatar;
+    imgEl.alt = comment.message;
+
+    newCommentElement.querySelector('.social__text').textContent = comment.message;
+    commentListFragment.appendChild(newCommentElement);
+  });
+
+  return commentListFragment;
+};
+
+const stuffBigPicture = ({ url, likes, comments, description }) => {
+  const socialCommentsBoxElement = previewBoxElement.querySelector('.social__comments');
+  socialCommentsBoxElement.innerHTML = '';
+
+  bigPictureElement.src = url;
+  likesCountElement.textContent = likes;
+  commentsCountElement.textContent = comments.length;
+
+  const commentListFragment = addComments(comments);
+  socialCommentsBoxElement.append(commentListFragment);
+
+  socialCaptionElement.textContent = description;
+};
+
 const renderFullSize = (data, idClicked) => {
   const objClicked = filterObject(data, 'id', +idClicked)[0];
-
+  // внимание !!!
+  // эмуляция ошибки - "неправильный ГУИД в данных"
+  // const objClicked = filterObject(data, 'id', 100)[0];
   if (!objClicked) {
+    hideElements(previewBoxElement.children[0], previewBoxElement.children[1]);
+    showAlert(previewBoxElement, 'error', closeModalWindow);
     return;
+  } else {
+    showElements(previewBoxElement.children[0], previewBoxElement.children[1]);
   }
 
-  bigPictureElement.src = objClicked.url;
-  likesCountElement.textContent = objClicked.likes;
-  commentsCountElement.textContent = objClicked.comments;
-  socialCaptionElement.textContent = objClicked.description;
+  // заполню основное описание
+  stuffBigPicture(objClicked);
 
-  socialCommentsBoxElement.append(createDomFragment(commentTemplateString));
+  // прячу блоки счётчика комментариев .social__comment-count
+  // и загрузки новых комментариев .comments-loader
+  hideElements(socialCommentCountElement, commentsLoaderElement);
 };
 
 export { renderFullSize };

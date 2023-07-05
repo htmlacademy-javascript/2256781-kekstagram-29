@@ -1,3 +1,16 @@
+const ALERT_STYLE = `
+  padding: 10px 3px;
+  font-size: 60px;
+`;
+
+function AlertMessageOptions() {
+  // стили
+  this.style = ALERT_STYLE;
+  this.id = 'alert-message';
+}
+
+const ALERT_SHOW_TIME = 3000;
+
 const isNormalLength = (string, length) => string.length <= length;
 // isNormalLength('проверяемая строка', 20); // true
 
@@ -91,7 +104,37 @@ const createDOMElement = (tag, opts) => {
   return el;
 };
 
-const createDomFragment = (str) => new Range().createContextualFragment(str);
+// функция генерирует DocumentFragment содержащий
+// DOM-элементы полученные из шаблонной строки
+const createDOMFragment = (str) => new Range().createContextualFragment(str);
+
+const showAlert = (domContainer = null, message, cb = () => void 0) => {
+  if (!domContainer || domContainer.querySelector('#alert-message')) {
+    return;
+  }
+
+  const alertContainer = createDOMElement('div', new AlertMessageOptions());
+  alertContainer.textContent = message;
+
+  domContainer.append(alertContainer);
+
+  setTimeout(() => {
+    alertContainer.remove();
+    cb();
+  }, ALERT_SHOW_TIME);
+};
+
+const hideElements = (...domElements) => {
+  domElements.forEach((element) => {
+    element.classList.add('hidden');
+  });
+};
+
+const showElements = (...domElements) => {
+  domElements.forEach((element) => {
+    element.classList.remove('hidden');
+  });
+};
 
 export {
   getNumber,
@@ -105,5 +148,8 @@ export {
   isEnterKey,
   filterObject,
   createDOMElement,
-  createDomFragment,
+  createDOMFragment,
+  showAlert,
+  hideElements,
+  showElements,
 };

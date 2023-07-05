@@ -1,9 +1,21 @@
 import { isEscapeKey, isEnterKey } from './util.js';
 
+// DOM elements
 const modalElement = document.querySelector('.overlay');
 const bodyElement = document.querySelector('body');
 const closeElement = document.querySelector('.big-picture__cancel');
 const picturesContainerElement = document.querySelector('.pictures.container');
+
+// handlers
+closeElement.addEventListener('click', () => {
+  closeModalWindow();
+});
+
+closeElement.addEventListener('keydown', (evt) => {
+  if (isEnterKey(evt)) {
+    closeModalWindow();
+  }
+});
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -12,6 +24,7 @@ const onDocumentKeydown = (evt) => {
   }
 };
 
+// show/hide overlay
 function openModalWindow() {
   modalElement.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
@@ -24,12 +37,14 @@ function closeModalWindow() {
   document.removeEventListener('keydown', onDocumentKeydown);
 }
 
+// delegating event to ancestor element
 function onClickMiniature(evt) {
   if (evt.target.matches('img.picture__img')) {
     openModalWindow();
   }
 }
 
+// a main function
 const setMiniatureClick = (cb) => {
   picturesContainerElement.addEventListener('click', (evt) => {
     onClickMiniature(evt);
@@ -39,14 +54,4 @@ const setMiniatureClick = (cb) => {
   });
 };
 
-closeElement.addEventListener('click', () => {
-  closeModalWindow();
-});
-
-closeElement.addEventListener('keydown', (evt) => {
-  if (isEnterKey(evt)) {
-    closeModalWindow();
-  }
-});
-
-export { setMiniatureClick };
+export { setMiniatureClick, closeModalWindow };
