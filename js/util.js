@@ -108,7 +108,7 @@ const createDOMElement = (tag, opts) => {
 // DOM-элементы полученные из шаблонной строки
 const createDOMFragment = (str) => new Range().createContextualFragment(str);
 
-const showAlert = (domContainer = null, message, cb = () => void 0) => {
+const showAlert = (domContainer = null, message = 'error', cb = () => void 0) => {
   if (!domContainer || domContainer.querySelector('#alert-message')) {
     return;
   }
