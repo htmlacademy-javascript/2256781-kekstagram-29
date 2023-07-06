@@ -54,8 +54,7 @@ const renderFullSize = (data, idClicked) => {
   const previewBoxHideElements = [previewBoxElement.children[0], previewBoxElement.children[1]];
   const atTheTimeHideElements = [socialCommentCountElement, commentsLoaderElement];
 
-  // внимание !!!
-  // эмуляция ошибки - "неправильный ГУИД в данных"
+  // эмуляция ошибки !!! - "неправильный ГУИД в данных"
   // const objClicked = filterObject(data, 'id', 100)[0];
   if (!objClicked) {
     hideElements(previewBoxHideElements);
