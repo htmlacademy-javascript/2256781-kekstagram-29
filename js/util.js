@@ -124,13 +124,13 @@ const showAlert = (domContainer = null, message = 'error', cb = () => void 0) =>
   }, ALERT_SHOW_TIME);
 };
 
-const hideElements = (...domElements) => {
+const hideElements = (domElements) => {
   domElements.forEach((element) => {
     element.classList.add('hidden');
   });
 };
 
-const showElements = (...domElements) => {
+const showElements = (domElements) => {
   domElements.forEach((element) => {
     element.classList.remove('hidden');
   });

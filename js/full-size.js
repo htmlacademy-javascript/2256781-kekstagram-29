@@ -51,15 +51,18 @@ const stuffBigPicture = ({ url, likes, comments, description }) => {
 
 const renderFullSize = (data, idClicked) => {
   const objClicked = filterObject(data, 'id', +idClicked)[0];
+  const previewBoxHideElements = [previewBoxElement.children[0], previewBoxElement.children[1]];
+  const atTheTimeHideElements = [socialCommentCountElement, commentsLoaderElement];
+
   // внимание !!!
   // эмуляция ошибки - "неправильный ГУИД в данных"
   // const objClicked = filterObject(data, 'id', 100)[0];
   if (!objClicked) {
-    hideElements(previewBoxElement.children[0], previewBoxElement.children[1]);
+    hideElements(previewBoxHideElements);
     showAlert(previewBoxElement, 'error', closeModalWindow);
     return;
   } else {
-    showElements(previewBoxElement.children[0], previewBoxElement.children[1]);
+    showElements(previewBoxHideElements);
   }
 
   // заполню основное описание
@@ -67,7 +70,7 @@ const renderFullSize = (data, idClicked) => {
 
   // прячу блоки счётчика комментариев .social__comment-count
   // и загрузки новых комментариев .comments-loader
-  hideElements(socialCommentCountElement, commentsLoaderElement);
+  hideElements(atTheTimeHideElements);
 };
 
 export { renderFullSize };

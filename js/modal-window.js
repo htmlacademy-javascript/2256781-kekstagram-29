@@ -45,7 +45,7 @@ function onClickMiniature(evt) {
 }
 
 // a main function
-const setMiniatureClick = (cb) => {
+const setMiniatureContainerClick = (cb) => {
   picturesContainerElement.addEventListener('click', (evt) => {
     onClickMiniature(evt);
     // делаю рендер полноразмерной картинки
@@ -54,4 +54,4 @@ const setMiniatureClick = (cb) => {
   });
 };
 
-export { setMiniatureClick, closeModalWindow };
+export { setMiniatureContainerClick, closeModalWindow };
