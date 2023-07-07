@@ -1,12 +1,11 @@
 import { getData } from './api.js';
-import { renderPictureList } from './render.js';
-
-const plug = (errMsg) => void errMsg;
+import { renderMiniatureList } from './miniature.js';
+import { renderFullSize } from './full-size.js';
+import { setMiniatureContainerClick } from './modal-window.js';
 
 getData()
   .then((data) => {
-    renderPictureList(data);
+    renderMiniatureList(data);
+    setMiniatureContainerClick(renderFullSize.bind(null, data));
   })
-  .catch((err) => {
-    plug(err.message);
-  });
+  .catch(() => {});
