@@ -3,11 +3,11 @@ const ALERT_STYLE = `
   font-size: 60px;
 `;
 
-function AlertMessageOptions() {
+const ALERT_OPTIONS = {
   // стили
-  this.style = ALERT_STYLE;
-  this.id = 'alert-message';
-}
+  style: ALERT_STYLE,
+  id: 'alert-message',
+};
 
 const ALERT_SHOW_TIME = 3000;
 
@@ -92,6 +92,8 @@ const isEnterKey = (evt) => evt.key === 'Enter';
 
 const filterObject = (arr, key, value) => arr.filter((obj) => obj[key] === value);
 
+const findObject = (arr, key, value) => arr.find((obj) => obj[key] === value);
+
 // функция принимает название тега и объект с
 // настройками
 const createDOMElement = (tag, opts) => {
@@ -108,12 +110,12 @@ const createDOMElement = (tag, opts) => {
 // DOM-элементы полученные из шаблонной строки
 const createDOMFragment = (str) => new Range().createContextualFragment(str);
 
-const showAlert = (domContainer = null, message = 'error', cb = () => void 0) => {
+const showAlert = (domContainer = null, message = 'error', cb = () => {}) => {
   if (!domContainer || domContainer.querySelector('#alert-message')) {
     return;
   }
 
-  const alertContainer = createDOMElement('div', new AlertMessageOptions());
+  const alertContainer = createDOMElement('div', ALERT_OPTIONS);
   alertContainer.textContent = message;
 
   domContainer.append(alertContainer);
@@ -147,6 +149,7 @@ export {
   isEscapeKey,
   isEnterKey,
   filterObject,
+  findObject,
   createDOMElement,
   createDOMFragment,
   showAlert,

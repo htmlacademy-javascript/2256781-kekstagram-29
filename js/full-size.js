@@ -1,5 +1,4 @@
-import { filterObject, createDOMFragment, showAlert, hideElements, showElements } from './util.js';
-import { closeModalWindow } from './modal-window.js';
+import { findObject, createDOMFragment, hideElements } from './util.js';
 
 const previewBoxElement = document.querySelector('.big-picture__preview');
 const bigPictureElement = previewBoxElement.firstElementChild.children[0];
@@ -10,12 +9,12 @@ const socialCommentCountElement = document.querySelector('.social__comment-count
 const commentsLoaderElement = previewBoxElement.querySelector('.comments-loader');
 const commentTemplateString = `
   <li class="social__comment">
-      <img
+    <img
         class="social__picture"
-        src=""
-        alt=""
+        src="{{аватар}}"
+        alt="{{имя комментатора}}"
         width="35" height="35">
-      <p class="social__text">{{текст комментария}}</p>
+    <p class="social__text">{{текст комментария}}</p>
   </li>
 `;
 
@@ -50,19 +49,8 @@ const stuffBigPicture = ({ url, likes, comments, description }) => {
 };
 
 const renderFullSize = (data, idClicked) => {
-  const objClicked = filterObject(data, 'id', +idClicked)[0];
-  const previewBoxHideElements = [previewBoxElement.children[0], previewBoxElement.children[1]];
+  const objClicked = findObject(data, 'id', parseInt(idClicked, 10));
   const atTheTimeHideElements = [socialCommentCountElement, commentsLoaderElement];
-
-  // эмуляция ошибки !!! - "неправильный ГУИД в данных"
-  // const objClicked = filterObject(data, 'id', 100)[0];
-  if (!objClicked) {
-    hideElements(previewBoxHideElements);
-    showAlert(previewBoxElement, 'error', closeModalWindow);
-    return;
-  } else {
-    showElements(previewBoxHideElements);
-  }
 
   // заполню основное описание
   stuffBigPicture(objClicked);
