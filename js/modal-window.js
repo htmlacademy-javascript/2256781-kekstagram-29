@@ -54,4 +54,4 @@ const setMiniatureContainerClick = (cb) => {
   });
 };
 
-export { setMiniatureContainerClick, closeModalWindow };
+export { setMiniatureContainerClick };

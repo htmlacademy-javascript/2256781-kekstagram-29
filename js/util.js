@@ -111,7 +111,7 @@ const createDOMElement = (tag, opts) => {
 const createDOMFragment = (str) => new Range().createContextualFragment(str);
 
 const showAlert = (domContainer = null, message = 'error', cb = () => {}) => {
-  if (!domContainer || domContainer.querySelector('#alert-message')) {
+  if (!domContainer) {
     return;
   }
 
@@ -138,6 +138,24 @@ const showElements = (domElements) => {
   });
 };
 
+const debounce = (callback, timeoutDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+const addListener = (event = 'click', userMethodName, domElement, cb) => {
+  if (domElement[userMethodName]) {
+    domElement.removeEventListener(event, domElement[userMethodName]);
+  }
+
+  domElement[userMethodName] = cb;
+
+  domElement.addEventListener(event, domElement[userMethodName]);
+};
+
 export {
   getNumber,
   isPalindrome,
@@ -155,4 +173,6 @@ export {
   showAlert,
   hideElements,
   showElements,
+  debounce,
+  addListener,
 };

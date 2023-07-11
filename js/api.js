@@ -12,7 +12,7 @@ const CountLikes = {
 
 const CountComments = {
   START: 0,
-  END: 3,
+  END: 25,
 };
 
 const CountForAvatar = {
