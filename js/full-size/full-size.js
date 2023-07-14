@@ -1,4 +1,4 @@
-import { findObject, createDOMFragment, debounce, addListener } from '../util.js';
+import { findObject, createDOMFragment, debounce, addRemoveListener, clearContainer } from '../util.js';
 import { DEBOUNCE_DELAY, COMMENTS_PORTION } from './constants.js';
 
 const previewBoxElement = document.querySelector('.big-picture__preview');
@@ -57,7 +57,7 @@ const renderComments = (comments) => {
 };
 
 const stuffBigPicture = ({ url, likes, comments, description }) => {
-  socialCommentsBoxElement.innerHTML = '';
+  clearContainer(socialCommentsBoxElement);
 
   bigPictureElement.src = url;
   likesCountElement.textContent = likes;
@@ -80,7 +80,7 @@ const renderFullSize = (data, idClicked) => {
 
   // !!! чтобы избежать дублирования обработчиков на кнопке
   // которое происходит после обычного вызова addEventlistener
-  addListener('click', 'onClick', commentsLoaderElement, (evt) => {
+  addRemoveListener('click', 'onClick', commentsLoaderElement, (evt) => {
     evt.preventDefault();
     //уменьшение дребезга кнопки
     debounce(onCommentsLoaderClick(objClicked), DEBOUNCE_DELAY);

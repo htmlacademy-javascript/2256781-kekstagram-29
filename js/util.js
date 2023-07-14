@@ -110,7 +110,7 @@ const createDOMElement = (tag, opts) => {
 // DOM-элементы полученные из шаблонной строки
 const createDOMFragment = (str) => new Range().createContextualFragment(str);
 
-const showAlert = (domContainer = null, message = 'error', cb = () => {}) => {
+const showAlert = (domContainer = null, message = 'encountered an error', cb = () => {}) => {
   if (!domContainer) {
     return;
   }
@@ -146,15 +146,24 @@ const debounce = (callback, timeoutDelay) => {
   };
 };
 
-const addListener = (event = 'click', userMethodName, domElement, cb) => {
-  if (domElement[userMethodName]) {
-    domElement.removeEventListener(event, domElement[userMethodName]);
+const addRemoveListener = (
+  event = 'click',
+  userMethodName = 'onClick',
+  domElement = document,
+  handler,
+  onlyRemove = false,
+) => {
+  domElement.removeEventListener(event, domElement[userMethodName]);
+  if (onlyRemove) {
+    return;
   }
 
-  domElement[userMethodName] = cb;
+  domElement[userMethodName] = handler;
 
   domElement.addEventListener(event, domElement[userMethodName]);
 };
+
+const clearContainer = (сontainerElement) => (сontainerElement.innerHTML = '');
 
 export {
   getNumber,
@@ -174,5 +183,6 @@ export {
   hideElements,
   showElements,
   debounce,
-  addListener,
+  addRemoveListener,
+  clearContainer,
 };
