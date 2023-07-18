@@ -1,9 +1,11 @@
 import { addRemoveListener, isNormalLength } from '../util.js';
-import { HASHTAG_CHARACTERS, HASHTAG_COUNT, COMMENT_COUNT } from './constants.js';
-import { formUploadElement, fieldHashtagElement, commentFieldElement, uploadFormCloseElement } from './elements.js';
+import { HashTag, COMMENT_COUNT, PrestineErrorText } from './constants.js';
+import { uploadFormElementList } from './elements.js';
+import { resetScale } from './scale.js';
+import { resetEffect } from './effect.js';
 
 const pristine = new Pristine(
-  formUploadElement,
+  uploadFormElementList.formUploadElement,
   {
     // class of the parent element where the error/success class is added
     classTo: 'img-upload__field-wrapper',
@@ -20,7 +22,7 @@ const validateComment = (value) => isNormalLength(value, COMMENT_COUNT);
 
 const getCommentErrorMessage = () => `Комментарий не может быть больше ${COMMENT_COUNT} символов`;
 
-pristine.addValidator(commentFieldElement, validateComment, getCommentErrorMessage);
+pristine.addValidator(uploadFormElementList.commentFieldElement, validateComment, getCommentErrorMessage);
 
 // валидация хэштэг
 const validateLengthHashTag = (value) => {
@@ -30,7 +32,7 @@ const validateLengthHashTag = (value) => {
     .split(' ')
     .filter((tag) => tag.trim().length);
 
-  const res = isNormalLength(tags, HASHTAG_COUNT);
+  const res = isNormalLength(tags, HashTag.COUNT);
 
   return res;
 };
@@ -42,7 +44,7 @@ const validateContentHashTag = (value) => {
     .split(' ')
     .filter((tag) => tag.trim().length);
 
-  const isNormalTags = (tag) => HASHTAG_CHARACTERS.test(tag);
+  const isNormalTags = (tag) => HashTag.CHARACTERS.test(tag);
 
   return tags.every(isNormalTags);
 };
@@ -59,35 +61,43 @@ const validateUniqueHashTag = (value) => {
   return isUniqueTags();
 };
 
-const getHashTagLengthErrorMessage = () => `Количество хэштэгов должно быть не более ${HASHTAG_COUNT}`;
-const getHashTagContentErrorMessage = () => 'Вы использовали недопустимые символы';
-const getHashTagUniqueErrorMessage = () => 'Хэштэги повторяются';
+const getHashTagLengthErrorMessage = () => PrestineErrorText.INVALID_COUNT;
+const getHashTagContentErrorMessage = () => PrestineErrorText.INVALID_CONTENT;
+const getHashTagUniqueErrorMessage = () => PrestineErrorText.NOT_UNIQUE;
 
-pristine.addValidator(fieldHashtagElement, validateLengthHashTag, getHashTagLengthErrorMessage);
-pristine.addValidator(fieldHashtagElement, validateContentHashTag, getHashTagContentErrorMessage);
-pristine.addValidator(fieldHashtagElement, validateUniqueHashTag, getHashTagUniqueErrorMessage);
+pristine.addValidator(uploadFormElementList.fieldHashtagElement, validateLengthHashTag, getHashTagLengthErrorMessage);
+pristine.addValidator(uploadFormElementList.fieldHashtagElement, validateContentHashTag, getHashTagContentErrorMessage);
+pristine.addValidator(uploadFormElementList.fieldHashtagElement, validateUniqueHashTag, getHashTagUniqueErrorMessage);
 
-formUploadElement.addEventListener('submit', (evt) => {
+uploadFormElementList.formUploadElement.addEventListener('submit', (evt) => {
   if (!pristine.validate()) {
     evt.preventDefault();
   }
 });
 
 const disallowClosingUploadForm = () =>
-  document.activeElement === fieldHashtagElement || document.activeElement === commentFieldElement;
+  document.activeElement === uploadFormElementList.fieldHashtagElement ||
+  document.activeElement === uploadFormElementList.commentFieldElement;
 
-const reset = () => {
+const resetAll = () => {
   pristine.reset();
-  formUploadElement.reset();
+  resetScale();
+  resetEffect();
+  uploadFormElementList.formUploadElement.reset();
 };
 
 const onCloseModalWindow = (evt) => {
   if (evt.detail) {
-    reset();
+    resetAll();
   }
 };
 
 // подписка на закрытие модального окна загрузки нового изображения
-addRemoveListener('сlosingWindowEvent', 'onClosingWindowEvent', uploadFormCloseElement, onCloseModalWindow);
+addRemoveListener(
+  'сlosingWindowEvent',
+  'onClosingWindowEvent',
+  uploadFormElementList.uploadFormCloseElement,
+  onCloseModalWindow,
+);
 
 export { disallowClosingUploadForm };
