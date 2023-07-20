@@ -1,11 +1,12 @@
-import { getData } from './api.js';
-import { renderMiniatureList } from './miniature.js';
-import { setModalWindowHandlers } from './modal-window.js';
+import { getData } from './api/api.js';
+import { render } from './miniature/miniature.js';
+import { showAlert } from './util.js';
 import './upload-form/upload-form.js';
 
 getData()
   .then((data) => {
-    renderMiniatureList(data);
-    setModalWindowHandlers(data);
+    render(data);
   })
-  .catch(() => {});
+  .catch((err) => {
+    showAlert(document.body, err.message);
+  });

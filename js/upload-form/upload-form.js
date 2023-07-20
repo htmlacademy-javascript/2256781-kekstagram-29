@@ -1,8 +1,11 @@
 import { addRemoveListener, isNormalLength } from '../util.js';
-import { HashTag, COMMENT_COUNT, PrestineErrorText } from './constants.js';
+import { HashTag, COMMENT_COUNT, PrestineErrorText, SubmitButtonText } from './constants.js';
 import { uploadFormElementList } from './elements.js';
 import { resetScale } from './scale.js';
 import { resetEffect } from './effect.js';
+import { sendData } from '../api/api.js';
+import { showSuccessMessage, showErrorMessage } from './message.js';
+import { openModalWindow, closeModalWindow, closeUploadFormByEnterKey } from './handlers.js';
 
 const pristine = new Pristine(
   uploadFormElementList.formUploadElement,
@@ -69,35 +72,67 @@ pristine.addValidator(uploadFormElementList.fieldHashtagElement, validateLengthH
 pristine.addValidator(uploadFormElementList.fieldHashtagElement, validateContentHashTag, getHashTagContentErrorMessage);
 pristine.addValidator(uploadFormElementList.fieldHashtagElement, validateUniqueHashTag, getHashTagUniqueErrorMessage);
 
-uploadFormElementList.formUploadElement.addEventListener('submit', (evt) => {
-  if (!pristine.validate()) {
-    evt.preventDefault();
-  }
-});
-
-const disallowClosingUploadForm = () =>
-  document.activeElement === uploadFormElementList.fieldHashtagElement ||
-  document.activeElement === uploadFormElementList.commentFieldElement;
-
-const resetAll = () => {
+const resetAllSettings = () => {
   pristine.reset();
   resetScale();
   resetEffect();
   uploadFormElementList.formUploadElement.reset();
 };
 
-const onCloseModalWindow = (evt) => {
-  if (evt.detail) {
-    resetAll();
-  }
+// Отправка данных формы
+const disableSubmit = () => {
+  uploadFormElementList.uploadSubmitElement.textContent = SubmitButtonText.SUBMITTING;
+  uploadFormElementList.uploadSubmitElement.disabled = true;
+  uploadFormElementList.uploadSubmitElement.style.opacity = 0.5;
 };
 
-// подписка на закрытие модального окна загрузки нового изображения
-addRemoveListener(
-  'сlosingWindowEvent',
-  'onClosingWindowEvent',
-  uploadFormElementList.uploadFormCloseElement,
-  onCloseModalWindow,
-);
+const enableSubmit = () => {
+  uploadFormElementList.uploadSubmitElement.textContent = SubmitButtonText.DEFAULT;
+  uploadFormElementList.uploadSubmitElement.disabled = false;
+  uploadFormElementList.uploadSubmitElement.style.opacity = 1;
+};
 
-export { disallowClosingUploadForm };
+const closeFormWithReset = () => {
+  closeModalWindow(resetAllSettings);
+};
+
+const onSubmit = (evt) => {
+  evt.preventDefault();
+
+  if (!pristine.validate()) {
+    return;
+  }
+
+  disableSubmit();
+
+  sendData(new FormData(evt.target))
+    .then(() => {
+      showSuccessMessage(closeFormWithReset);
+    })
+    .catch(() => {
+      showErrorMessage();
+    })
+    .finally(() => {
+      enableSubmit();
+    });
+};
+
+const onOpenWindow = () => {
+  openModalWindow(resetAllSettings);
+};
+
+const onCloseByClick = () => {
+  closeFormWithReset();
+};
+
+const onCloseByEnterKey = (evt) => {
+  closeUploadFormByEnterKey(evt, resetAllSettings);
+};
+
+// delegating event to ancestor element
+addRemoveListener('change', 'onChange', uploadFormElementList.parentElement, onOpenWindow);
+
+addRemoveListener('click', 'onClick', uploadFormElementList.formCloseElement, onCloseByClick);
+addRemoveListener('keydown', 'onKeydown', uploadFormElementList.formCloseElement, onCloseByEnterKey);
+
+addRemoveListener('submit', 'onSubmit', uploadFormElementList.formUploadElement, onSubmit);
