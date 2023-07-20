@@ -2,8 +2,6 @@ import { addRemoveListener, isEscapeKey } from '../util.js';
 import { messageElementList } from './elements.js';
 
 const onSuccessDocumentClick = (boxElement) => (cb) => (evt) => {
-  evt.preventDefault();
-
   if (!evt.target.closest('.success__inner')) {
     boxElement.remove();
     cb();
@@ -24,8 +22,6 @@ const onSuccessButtonClick = (boxElement) => (cb) => () => {
 };
 
 const onSuccessKeyDown = (boxElement) => (cb) => (evt) => {
-  evt.preventDefault();
-
   if (isEscapeKey(evt)) {
     boxElement.remove();
     cb();
@@ -60,8 +56,6 @@ const showSuccessMessage = (cb = () => {}) => {
 };
 
 const onErrorDocumentClick = (boxElement) => (evt) => {
-  evt.preventDefault();
-
   if (!evt.target.closest('.error__inner')) {
     boxElement.remove();
 
@@ -80,14 +74,14 @@ const onErrorButtonClick = (boxElement) => () => {
 };
 
 const onErrorKeyDown = (boxElement) => (evt) => {
-  evt.preventDefault();
-
   if (isEscapeKey(evt)) {
     boxElement.remove();
 
     addRemoveListener('click', 'onClick', messageElementList.errorButtonElement, () => {}, true);
     addRemoveListener('click', 'onClick', messageElementList.bodyElement, () => {}, true);
     addRemoveListener('keydown', 'onKeyDown', messageElementList.bodyElement, () => {}, true);
+
+    evt.stopPropagation();
   }
 };
 

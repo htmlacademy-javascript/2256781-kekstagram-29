@@ -21,7 +21,10 @@ const onPlusClick = () => {
   scaleImage(Scale.STEP);
 };
 
-const resetScale = () => scaleImage(Scale.DEFAULT);
+const resetScale = () => {
+  scaleElementList.scaleControlElement.value = Scale.DEFAULT;
+  scaleElementList.picturePreviewElement.style.transform = '';
+};
 
 // добавлю обработчики onMinusClick, onPlusClick
 addRemoveListener('click', 'onClick', scaleElementList.smallerControlElement, onMinusClick);

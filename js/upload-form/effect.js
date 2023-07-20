@@ -25,6 +25,12 @@ const updateSlider = () => {
     step: selectedEffect.step,
     connect: 'lower',
   });
+
+  if (isDefaultEffect()) {
+    hideSlider();
+  } else {
+    showSlider();
+  }
 };
 
 const onEffectChange = (evt) => {
@@ -36,12 +42,6 @@ const onEffectChange = (evt) => {
   selectedEffect = findObject(EFFECTS, 'name', currentEffectName);
 
   updateSlider();
-
-  if (isDefaultEffect()) {
-    hideSlider();
-  } else {
-    showSlider();
-  }
 
   effectElementList.picturePreviewElement.className = `effects__preview--${currentEffectName}`;
 };
