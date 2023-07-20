@@ -1,3 +1,9 @@
+const successTemplate = document.querySelector('#success').content.querySelector('.success');
+const successMessageBoxElement = successTemplate.cloneNode(true);
+
+const errorTemplate = document.querySelector('#error').content.querySelector('.error');
+const errorMessageBoxElement = errorTemplate.cloneNode(true);
+
 const uploadFormElementList = {
   formUploadElement: document.querySelector('.img-upload__form'),
   uploadFormCloseElement: document.querySelector('.img-upload__cancel'),
@@ -6,6 +12,10 @@ const uploadFormElementList = {
   uploadSubmitElement: document.querySelector('.img-upload__submit'),
   sendSuccessElement: document.querySelector('#success').content.querySelector('.success'),
   sendErrorElement: document.querySelector('#error').content.querySelector('.error'),
+  overlay: document.querySelector('.img-upload__overlay'),
+  parentElement: document.querySelector('.img-upload__start'),
+  formCloseElement: document.querySelector('.img-upload__cancel'),
+  bodyElement: document.querySelector('body'),
 };
 
 const scaleElementList = {
@@ -23,4 +33,14 @@ const effectElementList = {
   effectLevelElement: document.querySelector('.effect-level__value'),
 };
 
-export { uploadFormElementList, scaleElementList, effectElementList };
+const messageElementList = {
+  successTemplate,
+  successMessageBoxElement,
+  successButtonElement: successMessageBoxElement.querySelector('.success__button'),
+  bodyElement: document.body,
+  errorTemplate,
+  errorMessageBoxElement,
+  errorButtonElement: errorMessageBoxElement.querySelector('.error__button'),
+};
+
+export { uploadFormElementList, scaleElementList, effectElementList, messageElementList };

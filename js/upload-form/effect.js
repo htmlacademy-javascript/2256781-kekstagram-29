@@ -25,12 +25,6 @@ const updateSlider = () => {
     step: selectedEffect.step,
     connect: 'lower',
   });
-
-  if (isDefaultEffect()) {
-    hideSlider();
-  } else {
-    showSlider();
-  }
 };
 
 const onEffectChange = (evt) => {
@@ -38,12 +32,18 @@ const onEffectChange = (evt) => {
     return;
   }
 
-  const currentInputValue = evt.target.value;
-  selectedEffect = findObject(EFFECTS, 'name', currentInputValue);
+  const currentEffectName = evt.target.value;
+  selectedEffect = findObject(EFFECTS, 'name', currentEffectName);
 
   updateSlider();
 
-  effectElementList.picturePreviewElement.className = `effects__preview--${currentInputValue}`;
+  if (isDefaultEffect()) {
+    hideSlider();
+  } else {
+    showSlider();
+  }
+
+  effectElementList.picturePreviewElement.className = `effects__preview--${currentEffectName}`;
 };
 
 const onSliderUpdate = () => {
@@ -59,7 +59,7 @@ const onSliderUpdate = () => {
 const resetEffect = () => {
   selectedEffect = ORIGINAL_EFFECT;
   updateSlider();
-  effectElementList.effectLevelElement.value = 100;
+  effectElementList.effectLevelElement.value = ORIGINAL_EFFECT.max;
   effectElementList.picturePreviewElement.className = '';
 };
 
