@@ -115,6 +115,9 @@ function throttle(callback, delayBetweenFrames) {
   };
 }
 
+// обёртка которая позволяет пользоваться функциями (в том числе стрелочными)
+// расположенными внутри ф-ии родителя как "ручками" на события
+// без засорения вкадки Event Listeners (утечки памяти)
 const addRemoveListener = (
   event = 'click',
   userMethodName = 'onClick',
@@ -134,6 +137,15 @@ const addRemoveListener = (
 
 const clearContainer = (сontainerElement) => (сontainerElement.innerHTML = '');
 
+const shuffle = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+
+  return array;
+};
+
 export {
   isNormalLength,
   isEscapeKey,
@@ -149,4 +161,5 @@ export {
   throttle,
   addRemoveListener,
   clearContainer,
+  shuffle,
 };
