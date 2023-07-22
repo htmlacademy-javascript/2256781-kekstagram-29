@@ -19,10 +19,8 @@ const renderComments = (comments) => {
   partOfComments.forEach((comment) => {
     const newCommentElement = createDOMFragment(COMMENT_TEMPLATE);
     const imgEl = newCommentElement.querySelector('.social__picture');
-
     imgEl.src = comment.avatar;
-    imgEl.alt = comment.message;
-
+    imgEl.alt = comment.name;
     newCommentElement.querySelector('.social__text').textContent = comment.message;
     commentListFragment.appendChild(newCommentElement);
   });

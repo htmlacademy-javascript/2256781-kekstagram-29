@@ -7,6 +7,13 @@ import { sendData } from '../api/api.js';
 import { showSuccessMessage, showErrorMessage } from './message.js';
 import { openModalWindow, closeModalWindow, closeUploadFormByEnterKey } from './handlers.js';
 
+const getNormalizeString = (str) =>
+  str
+    .trim()
+    .toLowerCase()
+    .split(' ')
+    .filter((tag) => tag.trim().length);
+
 const pristine = new Pristine(
   uploadFormElementList.formUploadElement,
   {
@@ -15,7 +22,7 @@ const pristine = new Pristine(
     // class of the parent element where error text element is appended
     errorTextParent: 'img-upload__field-wrapper',
     // class of the error text element
-    errorTextClass: 'img-upload__field-wrapper--error',
+    // errorTextClass: 'img-upload__field-wrapper--error',
   },
   false,
 );
@@ -28,55 +35,69 @@ const getCommentErrorMessage = () => `Комментарий не может б�
 pristine.addValidator(uploadFormElementList.commentFieldElement, validateComment, getCommentErrorMessage);
 
 // валидация хэштэг
-const validateLengthHashTag = (value) => {
-  const tags = value
-    .trim()
-    .toLowerCase()
-    .split(' ')
-    .filter((tag) => tag.trim().length);
-
-  const res = isNormalLength(tags, HashTag.COUNT);
-
-  return res;
+const validateUniqueHashTag = (value) => {
+  const tags = getNormalizeString(value);
+  const isUnique = () => tags.length === new Set(tags).size;
+  return isUnique();
 };
 
 const validateContentHashTag = (value) => {
-  const tags = value
-    .trim()
-    .toLowerCase()
-    .split(' ')
-    .filter((tag) => tag.trim().length);
-
-  const isNormalTags = (tag) => HashTag.CHARACTERS.test(tag);
-
-  return tags.every(isNormalTags);
+  const tags = getNormalizeString(value);
+  const isNormalContent = (tag) => HashTag.CHARACTERS.test(tag);
+  return tags.every(isNormalContent);
 };
 
-const validateUniqueHashTag = (value) => {
-  const tags = value
-    .trim()
-    .toLowerCase()
-    .split(' ')
-    .filter((tag) => tag.trim().length);
-
-  const isUniqueTags = () => tags.length === new Set(tags).size;
-
-  return isUniqueTags();
+const validateCountHashTag = (value) => {
+  const tags = getNormalizeString(value);
+  return isNormalLength(tags, HashTag.COUNT);
 };
 
-const getHashTagLengthErrorMessage = () => PrestineErrorText.INVALID_COUNT;
-const getHashTagContentErrorMessage = () => PrestineErrorText.INVALID_CONTENT;
+const validateMaxLengthHashTag = (value) => {
+  const tags = getNormalizeString(value);
+  const isNormal = (tag) => tag.length <= HashTag.MAX_LENGTH_TAG;
+  return tags.every(isNormal);
+};
+
 const getHashTagUniqueErrorMessage = () => PrestineErrorText.NOT_UNIQUE;
+const getHashTagContentErrorMessage = () => PrestineErrorText.INVALID_CONTENT;
+const getHashTagCountErrorMessage = () => PrestineErrorText.INVALID_COUNT;
+const getHashTagMaxLengthErrorMessage = () => PrestineErrorText.INVALID_LENGTH;
 
-pristine.addValidator(uploadFormElementList.fieldHashtagElement, validateLengthHashTag, getHashTagLengthErrorMessage);
-pristine.addValidator(uploadFormElementList.fieldHashtagElement, validateContentHashTag, getHashTagContentErrorMessage);
-pristine.addValidator(uploadFormElementList.fieldHashtagElement, validateUniqueHashTag, getHashTagUniqueErrorMessage);
+pristine.addValidator(
+  uploadFormElementList.fieldHashtagElement,
+  validateUniqueHashTag,
+  getHashTagUniqueErrorMessage,
+  1,
+  true,
+);
+pristine.addValidator(
+  uploadFormElementList.fieldHashtagElement,
+  validateContentHashTag,
+  getHashTagContentErrorMessage,
+  2,
+  true,
+);
+pristine.addValidator(
+  uploadFormElementList.fieldHashtagElement,
+  validateCountHashTag,
+  getHashTagCountErrorMessage,
+  3,
+  true,
+);
+pristine.addValidator(
+  uploadFormElementList.fieldHashtagElement,
+  validateMaxLengthHashTag,
+  getHashTagMaxLengthErrorMessage,
+  4,
+  true,
+);
 
 const resetAllSettings = () => {
   pristine.reset();
   resetScale();
   resetEffect();
   uploadFormElementList.formUploadElement.reset();
+  uploadFormElementList.bodyElement.classList.remove('modal-open');
 };
 
 // Отправка данных формы
@@ -107,6 +128,7 @@ const onSubmit = (evt) => {
 
   sendData(new FormData(evt.target))
     .then(() => {
+      resetAllSettings();
       showSuccessMessage(closeFormWithReset);
     })
     .catch(() => {

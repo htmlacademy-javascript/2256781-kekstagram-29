@@ -3,6 +3,7 @@ const COMMENT_COUNT = 140;
 const HashTag = {
   CHARACTERS: /^#[a-zа-яё0-9]{1,19}$/i,
   COUNT: 5,
+  MAX_LENGTH_TAG: 20,
 };
 
 const Scale = {
@@ -66,6 +67,7 @@ const PrestineErrorText = {
   INVALID_COUNT: `Количество хэштэгов должно быть не более ${HashTag.COUNT}`,
   NOT_UNIQUE: 'Хэштэги повторяются',
   INVALID_CONTENT: 'Вы использовали недопустимые символы в хэштэге',
+  INVALID_LENGTH: `максимальная длина одного хэш-тега ${HashTag.MAX_LENGTH_TAG} символов, включая решётку`,
 };
 
 const SubmitButtonText = {
