@@ -4,7 +4,6 @@ import { miniatureElementList } from './elements.js';
 import { DEBOUNCE_TIMEOUT, RANDOM_MINIATURES_COUNT, Filter } from './constants.js';
 
 let currentFilter = Filter.DEFAULT;
-let miniatures = [];
 
 const createPictureElement = ({ id, url, description, likes, comments }) => {
   const pictureElement = miniatureElementList.pictureTemplate.cloneNode(true);
@@ -23,8 +22,8 @@ const removeMiniatures = () => document.querySelectorAll('.picture').forEach((mi
 
 const sortByComments = (photo1, photo2) => photo2.comments.length - photo1.comments.length;
 
-const getFilteredPictures = () => {
-  switch (currentFilter) {
+const getFilteredPictures = (miniatures) => (filter) => {
+  switch (filter) {
     case Filter.RANDOM:
       return shuffle([...miniatures]).slice(0, RANDOM_MINIATURES_COUNT);
     case Filter.DISCUSSED:
@@ -34,7 +33,7 @@ const getFilteredPictures = () => {
   }
 };
 
-const render = (data) => {
+const render = (data, returnMiniatures) => {
   const pictureListFragment = document.createDocumentFragment();
   const openFullSizePicture = renderFullSize.bind(null, data);
   const showFilters = () => miniatureElementList.imageFilterBox.classList.remove('img-filters--inactive');
@@ -50,8 +49,7 @@ const render = (data) => {
   };
   const debounceRender = debounce(() => {
     removeMiniatures();
-    const filteredMiniatures = getFilteredPictures();
-    render(filteredMiniatures);
+    render(returnMiniatures(currentFilter), returnMiniatures);
   }, DEBOUNCE_TIMEOUT);
 
   const onClickFilter = (evt) => {
@@ -70,11 +68,9 @@ const render = (data) => {
     debounceRender();
   };
 
-  miniatures = miniatures.length === 0 ? [...data] : miniatures;
-
   showFilters();
 
-  data.forEach((photoDescriptionObj) => {
+  returnMiniatures(currentFilter).forEach((photoDescriptionObj) => {
     pictureListFragment.appendChild(createPictureElement(photoDescriptionObj));
   });
 
@@ -85,4 +81,4 @@ const render = (data) => {
   addRemoveListener('click', 'onClick', miniatureElementList.imageFilterBox, onClickFilter);
 };
 
-export { render };
+export { render, getFilteredPictures };
