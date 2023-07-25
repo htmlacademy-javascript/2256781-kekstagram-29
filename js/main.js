@@ -1,5 +1,5 @@
 import { getData } from './api/api.js';
-import { render } from './miniature/miniature.js';
+import { render } from './home/home.js';
 import { showAlert } from './util.js';
 import './upload-form/upload-form.js';
 
